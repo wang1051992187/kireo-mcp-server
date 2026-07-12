@@ -1,0 +1,87 @@
+{
+  "name": "@kireo/mcp-server",
+  "version": "0.2.1",
+  "mcpName": "io.github.wang1051992187/kireo",
+  "description": "Kireo MCP server — long-term memory for any MCP-compatible AI tool.",
+  "license": "MIT",
+  "homepage": "https://kireo.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wang1051992187/kireo-mcp-server.git"
+  },
+  "keywords": [
+    "mcp",
+    "memory",
+    "ai",
+    "claude",
+    "cursor",
+    "anthropic",
+    "model-context-protocol",
+    "mcp-server",
+    "claude-code",
+    "cline"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "bin": {
+    "kireo-mcp": "bin/kireo-mcp.cjs",
+    "kireo": "bin/kireo.cjs"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "chmod": {
+    "bin/kireo-mcp.cjs": 493,
+    "bin/kireo.cjs": 493
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "prepack": "pnpm run build && (chmod +x bin/kireo-mcp.cjs || true) && (chmod +x bin/kireo.cjs || true)",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "vitest run tests/e2e",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src tests",
+    "clean": "rm -rf dist .turbo coverage"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "ignore": "^5.3.2",
+    "pino": "^9.3.0",
+    "pino-roll": "^2.0.0",
+    "undici": "^6.19.0",
+    "tree-sitter-wasms": "^0.1.13",
+    "web-tree-sitter": "^0.20.8",
+    "zod": "^3.25.0",
+    "zod-to-json-schema": "^3.25.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "msw": "^2.3.0",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.0",
+    "vitest": "^1.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

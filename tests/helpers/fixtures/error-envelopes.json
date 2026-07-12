@@ -1,0 +1,32 @@
+{
+  "auth_invalid": {
+    "success": false,
+    "error": {
+      "code": "AUTH_INVALID_KEY",
+      "message": "invalid api key",
+      "request_id": "req_test_1"
+    }
+  },
+  "quota_exceeded": {
+    "success": false,
+    "error": {
+      "code": "QUOTA_EXCEEDED",
+      "message": "monthly write quota reached",
+      "upgrade_url": "https://kireo.ai/pricing",
+      "reset_at": "2026-06-01T00:00:00Z"
+    }
+  },
+  "rate_limited": {
+    "success": false,
+    "error": { "code": "RATE_LIMITED", "message": "slow down", "retry_after": 1 }
+  },
+  "internal": { "success": false, "error": { "code": "INTERNAL_ERROR", "message": "boom" } },
+  "validation": {
+    "success": false,
+    "error": {
+      "code": "VALIDATION_FAILED",
+      "message": "content too short",
+      "details": { "field": "content" }
+    }
+  }
+}

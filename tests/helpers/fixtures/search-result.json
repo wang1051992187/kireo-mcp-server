@@ -1,0 +1,23 @@
+{
+  "results": [
+    {
+      "id": "mem_01HXVK9ABCDEF",
+      "namespace": "default",
+      "content": "User prefers Tailwind v4",
+      "type": "preference",
+      "entities": ["Tailwind"],
+      "tags": ["css"],
+      "importance": 0.7,
+      "occurred_at": "2026-05-22T15:00:00Z",
+      "created_at": "2026-05-22T15:00:01Z",
+      "updated_at": "2026-05-22T15:00:01Z",
+      "deleted_at": null,
+      "schema_version": "1.0",
+      "score": 0.87,
+      "score_breakdown": { "semantic": 0.85, "keyword": 0.92 }
+    }
+  ],
+  "total": 1,
+  "elapsed_ms": 42,
+  "query_id": "qry_01HXVK9"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "kireo",
+  "displayName": "Kireo Memory",
+  "description": "Long-term memory for your AI: save decisions and gotchas as you work, recall them in any session.",
+  "version": "0.2.1",
+  "author": "Kireo",
+  "homepage": "https://kireo.app"
+}
