@@ -19,4 +19,4 @@
 
 3. Restart the client. Verify by calling the `memory_health` tool — it should
    return an ok status. If it errors with 401, the key is wrong or missing.
-4. No other setup is required. Node.js >= 18 must be available for `npx`.
+4. No other setup is required. Node.js >= 20 must be available for `npx`.

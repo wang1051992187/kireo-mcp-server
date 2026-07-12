@@ -2,7 +2,7 @@
   "name": "@kireo/mcp-server",
   "version": "0.2.1",
   "mcpName": "io.github.wang1051992187/kireo",
-  "description": "Kireo MCP server — long-term memory for any MCP-compatible AI tool.",
+  "description": "Long-term memory for Claude Code, Cursor, Cline & any MCP client — shared, searchable, with a web dashboard. Free beta.",
   "license": "MIT",
   "homepage": "https://kireo.app",
   "repository": {

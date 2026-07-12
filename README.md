@@ -11,10 +11,16 @@
 ## Quickstart
 
 1. Get an API key at <https://app.kireo.app/api-keys> (`ki_sk_…`).
-2. Add this MCP server to your host. **Claude Code** example:
+2. Add this MCP server to your host. **Claude Code** — run:
+
+```bash
+claude mcp add kireo --env KIREO_API_KEY=ki_sk_xxx -- npx -y @kireo/mcp-server
+```
+
+   Add `--scope user` to make it available in every project. Alternatively, check a project-scoped `.mcp.json` into your repo root with the same shape:
 
 ```jsonc
-// ~/.claude/mcp.json
+// .mcp.json (project root)
 {
   "mcpServers": {
     "kireo": {
@@ -43,7 +49,7 @@
 
 The server config is identical everywhere — only the file (or UI) each client reads it from differs. Use your `ki_sk_…` key from <https://app.kireo.app/api-keys>.
 
-**Claude Code** — `~/.claude/mcp.json` (see the Quickstart block above).
+**Claude Code** — run `claude mcp add kireo --env KIREO_API_KEY=ki_sk_xxx -- npx -y @kireo/mcp-server` (add `--scope user` for all projects), or check a project-scoped `.mcp.json` into your repo root (see the Quickstart block above).
 
 **Cursor** — `~/.cursor/mcp.json` (or `<workspace>/.cursor/mcp.json` for a single repo):
 
