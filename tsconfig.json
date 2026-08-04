@@ -16,8 +16,20 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+
+    // 这个 alias 是镜像仓库能独立构建的前提，别删。
+    // src/ 由 scripts/promo/sync-mcp-mirror.sh 从私有 monorepo rsync 覆盖，源码里对
+    // @kireo/shared 是**裸 import**（在 monorepo 里靠 pnpm workspace 解析）。镜像是独立
+    // 仓库、没有 workspace，同步脚本把 shared 的源码 vendor 到 vendor/shared/，所以这里
+    // 必须有 path 映射，裸 import 才解析得到。见 mirror-templates/README.md
+    //「镜像自有、同步脚本不碰的文件」一节。
+    "baseUrl": ".",
+    "paths": {
+      "@kireo/shared": ["./vendor/shared/index.ts"]
+    }
   },
-  "include": ["src", "tests"],
+  // vendor 必须进 include：它是被编译的真实源码，不是外部依赖。
+  "include": ["src", "tests", "vendor"],
   "exclude": ["dist", "node_modules"]
 }
