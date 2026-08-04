@@ -1,0 +1,42 @@
+# Smithery 清单——**预备件，本轮不提交**。
+#
+# 为什么先写不提交：Smithery 的托管/URL 模式条件还没满足（见实施计划 Task 7 Step 4），
+# 提交了也只能落到 stdio 本地档，收益约等于零，而"提交过又撤"在目录侧是负信号。
+# 文件先随镜像仓库存在，条件满足当天只需在 Smithery 网页点一次导入，省掉现写现调的往返。
+#
+# 结构核对自 Smithery 现网 stdio 服务器清单（startCommand.type=stdio +
+# configSchema + commandFunction + exampleConfig，2026-08-02 复核）。
+# commandFunction 收到的 config 已按 configSchema 校验过，函数里不必再做存在性判断。
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - kireoApiKey
+    properties:
+      kireoApiKey:
+        type: string
+        title: Kireo API key
+        description: >-
+          Get one at https://app.kireo.app/api-keys (free beta). Looks like ki_sk_….
+        pattern: '^ki_sk_'
+      kireoApiUrl:
+        type: string
+        title: API base URL
+        description: Override only when self-hosting the Kireo API.
+        default: https://api.kireo.app
+    additionalProperties: false
+  # 走 npx 而不是仓库内 dist/：Smithery 装的是 npm 上的已发布版本，
+  # 镜像仓库的构建产物不进包，args 指向本地路径会在托管环境里直接找不到文件。
+  commandFunction: |-
+    (config) => ({
+      command: 'npx',
+      args: ['-y', '@kireo/mcp-server'],
+      env: {
+        KIREO_API_KEY: config.kireoApiKey,
+        ...(config.kireoApiUrl ? { KIREO_API_URL: config.kireoApiUrl } : {}),
+      },
+    })
+  exampleConfig:
+    kireoApiKey: ki_sk_xxxxxxxxxxxxxxxxxxxxxxxx

@@ -1,4 +1,4 @@
-import { MEMORY_LIMITS } from '../../src/vendored/shared.js';
+import { MEMORY_LIMITS } from '@kireo/shared';
 import { describe, expect, it } from 'vitest';
 import { assembleSymbol, codeNamespace } from '../../src/index/assemble.js';
 import type { ExtractedSymbol } from '../../src/index/extractor.js';

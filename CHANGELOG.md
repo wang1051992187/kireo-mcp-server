@@ -2,6 +2,27 @@
 
 All notable changes to `@kireo/mcp-server` will be documented in this file.
 
+## 0.2.2 — 2026-08-02
+
+Docs and packaging only — **no runtime changes**. The published code is byte-identical to 0.2.1.
+
+- docs: the README now opens with a direct-answer block — what Kireo memory MCP is, and a
+  copy-paste server entry for Claude Code, Cursor, Cline, Claude Desktop, Windsurf and any other
+  MCP host, with the file each client expects it in. It also answers, in the README itself, the
+  questions people otherwise have to dig for: which eight tools ship, why memory is pulled rather
+  than injected into every prompt, how this differs from a `CLAUDE.md` / `.cursorrules` file,
+  whether `kireo index` uploads your code, and what it costs.
+- chore: the public mirror repo gains `glama.json` (declares the maintainer so the Glama listing
+  can be claimed), a prepared `smithery.yaml` (not submitted yet), and a tag-triggered
+  `publish-mcp.yml` that publishes to the official MCP Registry over GitHub OIDC — no more
+  five-minute device-code tokens.
+- chore: the private→public mirror sync is now a script (`scripts/promo/sync-mcp-mirror.sh`)
+  instead of remembered steps. It vendors `@kireo/shared`, keeps `server.json` in lockstep with
+  the version actually on npm, and is idempotent — re-running it when nothing changed does nothing.
+
+The Glama badge is intentionally not in the README yet: the listing has to be claimed first, and a
+badge for an unclaimed listing renders as a broken image.
+
 ## 0.2.1 — 2026-07-12
 
 - chore: correct repository metadata; add `mcpName` for the official MCP Registry; expand keywords. No runtime changes.

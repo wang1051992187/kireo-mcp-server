@@ -5,7 +5,7 @@ import pino from 'pino';
 import { describe, expect, it, vi } from 'vitest';
 import type { RestClient } from '../../src/rest/client.js';
 import { runIndex } from '../../src/index/run-index.js';
-import { MEMORY_LIMITS } from '../../src/vendored/shared.js';
+import { MEMORY_LIMITS } from '@kireo/shared';
 
 function repoFixture(): string {
   const root = mkdtempSync(join(tmpdir(), 'kireo-index-'));

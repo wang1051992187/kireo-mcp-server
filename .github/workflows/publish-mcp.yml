@@ -1,0 +1,96 @@
+# MCP Registry 发版（公开镜像仓库 wang1051992187/kireo-mcp-server 专用）
+#
+# 为什么存在：官方 Registry 的 device-code token 5 分钟就过期，每次发版都要人肉重跑一遍
+# `mcp-publisher login`。改用 GitHub OIDC 后整条链路零 secret、零人工——这是本轮推广里
+# 单点 ROI 最高的一处自动化。
+#
+# 为什么不在私有 monorepo 里跑：`login github-oidc` 换到的 registry 身份来自 **workflow
+# 所在仓库**，而 server.json 的 `name: io.github.wang1051992187/kireo` 命名空间归属由
+# Registry 按 GitHub 账号/仓库校验。镜像仓库才是 server.json 的家，所以这个 workflow
+# 必须住在镜像仓库里，由 scripts/promo/sync-mcp-mirror.sh 投放过去。
+#
+# 触发链：私有仓库发 npm → sync-mcp-mirror.sh 把源码/版本同步进镜像并 push tag vX.Y.Z
+#         → 本 workflow 被 tag 触发 → Registry 上出现同版本条目。
+# 注意：本 workflow **不发 npm**。npm 发布留在私有 monorepo（见 .github/workflows/release.yml
+# 与 npm-oidc-dryrun.yml），镜像只负责 Registry 这一跳，避免两个仓库抢同一个 npm 包名。
+
+name: publish-mcp
+
+on:
+  push:
+    tags: ['v*']
+  # 手动补发用：tag 已经推上去但当时 workflow 挂了，不必删 tag 重推
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: '要发布的 tag（如 v0.2.2），留空则用当前默认分支'
+        required: false
+        default: ''
+
+permissions:
+  id-token: write   # OIDC 换 registry token 的唯一前提，缺了它 login 会静默拿不到身份
+  contents: read
+
+concurrency:
+  group: publish-mcp-${{ github.ref }}
+  cancel-in-progress: false   # 发版不能被后一次触发腰斩
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      # server.json 的 version 必须和 tag 一致，否则 Registry 上会出现一个
+      # "tag 说 0.2.2、条目却写 0.2.1" 的幽灵版本，而且发完才发现只能再发一版盖掉。
+      # 放在安装 publisher 之前——早失败比晚失败便宜。
+      - name: verify server.json matches the tag
+        if: startsWith(github.ref, 'refs/tags/v') || inputs.ref != ''
+        run: |
+          set -euo pipefail
+          tag="${{ inputs.ref || github.ref_name }}"
+          want="${tag#v}"
+          test -f server.json || { echo "::error::server.json 不存在——镜像同步脚本没跑完整"; exit 1; }
+          got=$(node -e 'process.stdout.write(require("./server.json").version||"")')
+          pkg=$(node -e 'const p=require("./server.json").packages?.[0]; process.stdout.write(p?.version||"")')
+          echo "tag=${want} server.json.version=${got} packages[0].version=${pkg}"
+          [ "$got" = "$want" ] || { echo "::error::server.json version ${got} != tag ${want}"; exit 1; }
+          [ -z "$pkg" ] || [ "$pkg" = "$want" ] || { echo "::error::packages[0].version ${pkg} != tag ${want}"; exit 1; }
+
+      # 安装方式核对自官方 registry 仓库 docs/modelcontextprotocol-io/github-actions.mdx
+      # （2026-08-02 复核，当时 latest release = v1.8.0，资产命名
+      #  mcp-publisher_{linux,darwin,windows}_{amd64,arm64}.tar.gz）。
+      # 与官方片段的两处有意偏离：
+      #  1. curl 加 -fsS：官方只有 -L。没有 -f 时 404 会把一段 HTML 喂给 tar，
+      #     报出来的是莫名其妙的 "gzip: stdin: not in gzip format"，排查成本远高于直接失败。
+      #  2. 不 pin 版本：Registry 服务端偶尔会抬高 publisher 最低版本要求，pin 住反而会在
+      #     某天突然发不出去。代价是供应链上信任 latest；如果哪天要收紧，把 URL 里的
+      #     `latest/download` 换成 `download/v1.8.0` 并同步校验 registry_1.8.0_checksums.txt。
+      - name: install mcp-publisher
+        run: |
+          set -euo pipefail
+          os=$(uname -s | tr '[:upper:]' '[:lower:]')
+          arch=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_${os}_${arch}.tar.gz" \
+            | tar xz mcp-publisher
+          chmod +x ./mcp-publisher
+          ./mcp-publisher --version || true   # 版本号进日志，方便日后复盘"那天用的是哪版"
+
+      - name: login (github-oidc, 零 secret)
+        run: ./mcp-publisher login github-oidc
+
+      - name: publish
+        run: ./mcp-publisher publish
+
+      # 发完立刻回读一次。Registry 是最终一致的，publish 返回 200 不等于条目已可见；
+      # 这一步失败不代表发版失败，所以 continue-on-error——它的作用是把"到底发上去没有"
+      # 写进 workflow 日志，省掉事后人肉 curl。
+      - name: read back from the registry
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          sleep 10
+          curl -fsS "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.wang1051992187/kireo" \
+            | head -c 2000 || echo "回读失败（不影响发版结论，手动复核 registry API）"

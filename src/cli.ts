@@ -1,5 +1,5 @@
 import { basename, resolve } from 'node:path';
-import { MEMORY_LIMITS } from './vendored/shared.js';
+import { MEMORY_LIMITS } from '@kireo/shared';
 import { loadConfig } from './config/merge.js';
 import { createLogger } from './observability/logger.js';
 import { deviceIdOrAnon } from './observability/device-id.js';

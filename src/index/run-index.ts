@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import type { Logger } from 'pino';
-import { MEMORY_LIMITS } from '../vendored/shared.js';
+import { MEMORY_LIMITS } from '@kireo/shared';
 import type { RestClient } from '../rest/client.js';
 import type { BatchCreateResponse } from '../rest/types.js';
 import { type CreateMemoryDTO, assembleSymbol, codeNamespace } from './assemble.js';

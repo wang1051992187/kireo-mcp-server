@@ -1,4 +1,4 @@
-import { MEMORY_LIMITS, repoSlug } from '../vendored/shared.js';
+import { MEMORY_LIMITS, repoSlug } from '@kireo/shared';
 import type { ExtractedSymbol } from './extractor.js';
 
 export interface CodeMemoryMetadata {
