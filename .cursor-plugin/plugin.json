@@ -1,8 +1,33 @@
 {
   "name": "kireo",
   "displayName": "Kireo Memory",
-  "description": "Long-term memory for your AI: save decisions and gotchas as you work, recall them in any session.",
+  "description": "Long-term memory for your AI: save decisions and gotchas as you work, then recall them in any session.",
   "version": "0.2.1",
-  "author": "Kireo",
-  "homepage": "https://kireo.app"
+  "author": {
+    "name": "Kireo"
+  },
+  "homepage": "https://kireo.app",
+  "repository": "https://github.com/wang1051992187/kireo-mcp-server",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "memory",
+    "ai-memory",
+    "cursor",
+    "lancedb"
+  ],
+  "logo": "logo.png",
+  "variables": {
+    "type": "object",
+    "properties": {
+      "KIREO_API_KEY": {
+        "type": "string",
+        "title": "Kireo API key",
+        "description": "Create a key at https://app.kireo.app/app/api-keys"
+      }
+    },
+    "required": [
+      "KIREO_API_KEY"
+    ]
+  }
 }

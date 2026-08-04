@@ -1,23 +1,104 @@
-<p align="center">
-  <img src="./logo.png" alt="Kireo" width="120" height="120" />
-</p>
-
 # @kireo/mcp-server
 
-> Kireo gives Claude Code, Cursor, and any MCP client a shared long-term memory — save decisions and gotchas as you work, recall them from any tool, and browse, edit, or delete everything in a web dashboard. Free beta.
+> Long-term memory for any MCP-compatible AI tool (Claude Code, Cursor, Windsurf, Cline, Zed, Continue …).
 
 [![npm version](https://img.shields.io/npm/v/@kireo/mcp-server.svg)](https://www.npmjs.com/package/@kireo/mcp-server)
 
+<!-- KIREO:ANSWER-BLOCK:START -->
+<!-- Generated block — edit it in the private monorepo, not here; it is overwritten on every sync. -->
+
+## What is Kireo memory MCP?
+
+**Kireo memory MCP** is a Model Context Protocol server that gives Claude Code, Cursor, Cline,
+Windsurf and any other MCP client long-term memory. Save a decision once; recall it in any later
+session, on any machine. Hybrid semantic + keyword search over LanceDB, eight MCP tools, plus
+local code indexing. Free beta — an API key is all you need.
+
+### How do I install Kireo memory MCP?
+
+One line for Claude Code, one JSON block everywhere else. Both need a free key from
+<https://app.kireo.app/app/api-keys> (`ki_sk_…`).
+
+```bash
+# Claude Code — add --scope user to get it in every project
+claude mcp add kireo --scope user --env KIREO_API_KEY=ki_sk_xxx -- npx -y --package=@kireo/mcp-server kireo-mcp
+```
+
+Every other client takes the same server entry; only the file it goes in differs:
+
+```jsonc
+{
+  "mcpServers": {
+    "kireo": {
+      "command": "npx",
+      "args": ["-y", "--package=@kireo/mcp-server", "kireo-mcp"],
+      "env": { "KIREO_API_KEY": "ki_sk_xxx" }
+    }
+  }
+}
+```
+
+| Client | Where that block goes |
+|---|---|
+| Claude Code | `.mcp.json` in the project root (or use the `claude mcp add` line above) |
+| Cursor | `~/.cursor/mcp.json`, or `<workspace>/.cursor/mcp.json` for one repo |
+| Cline | MCP Servers → Configure MCP Servers (`cline_mcp_settings.json`) |
+| Claude Desktop | `claude_desktop_config.json` (Settings → Developer → Edit Config) |
+| Windsurf | `~/.codeium/windsurf/mcp_config.json` |
+| Zed / Continue / any MCP host | Whatever that host calls its MCP server list — same three fields |
+
+Restart the client afterwards. Node.js ≥ 18 must be on PATH for `npx`.
+
+### Which tools does it expose?
+
+Eight, over MCP stdio: `memory_save`, `memory_search`, `memory_recall`, `memory_get`,
+`memory_update`, `memory_delete`, `memory_list_namespaces`, `memory_health`. Every client sees the
+same set. Call `memory_health` first to confirm the key works.
+
+### Does it bloat my prompt?
+
+No — memory is pulled, not pushed. Nothing is injected into the system prompt. The agent calls
+`memory_search` only when it decides prior context is worth retrieving, and gets back a bounded
+ranked set (default 10 hits, hard cap 50), so tokens are spent per-query rather than per-turn.
+
+### How is it different from a CLAUDE.md / .cursorrules file?
+
+A rules file is static text re-read in full every session and shared by nothing. Kireo memory MCP
+is queried on demand, is written by the agent as work happens, is searchable semantically, and is
+shared across projects, sessions and machines through namespaces.
+
+### Can it index my codebase?
+
+Yes. `npx -y -p @kireo/mcp-server kireo index ./ --repo my-app` extracts functions/classes/methods
+into a `code-<repo>` namespace that `memory_search` can reach. Indexing is incremental — re-runs
+only send changed files, and the server dedupes identical symbols, so retrying is safe.
+
+### Is my code uploaded?
+
+No. Only the content explicitly passed to `memory_save` (and, if you run `kireo index`, the symbols
+it extracts) leaves your machine. Set `KIREO_TELEMETRY=0` to also drop the `X-Device-Id` header.
+
+### What does it cost?
+
+Free beta. Sign up at <https://app.kireo.app>, create a key, done — no card.
+
+<!-- KIREO:ANSWER-BLOCK:END -->
+
 ## Quickstart
 
-1. Get an API key at <https://app.kireo.app/api-keys> (`ki_sk_…`).
+1. Get an API key at <https://app.kireo.app/app/api-keys> (`ki_sk_…`).
 2. Add this MCP server to your host. **Claude Code** — run:
 
 ```bash
-claude mcp add kireo --env KIREO_API_KEY=ki_sk_xxx -- npx -y @kireo/mcp-server
+claude mcp add kireo --scope user --env KIREO_API_KEY=ki_sk_xxx -- npx -y --package=@kireo/mcp-server kireo-mcp
 ```
 
-   Add `--scope user` to make it available in every project. Alternatively, check a project-scoped `.mcp.json` into your repo root with the same shape:
+   Two details in that line are load-bearing, both verified against claude 2.1.220 and npm 11 on 2026-08-03:
+
+   - **`--package=@kireo/mcp-server kireo-mcp`, not `@kireo/mcp-server`.** This package ships two binaries (`kireo`, `kireo-mcp`), neither named after the package, so `npx -y @kireo/mcp-server` cannot pick one and fails with `could not determine executable to run`.
+   - **`--package=`, not the short `-p`.** A bare `-p` after `--` gets swallowed by the `claude mcp add` option parser, which then rejects its own flag: `claude mcp add kireo --env … -- npx -y -p @kireo/mcp-server kireo-mcp` errors with `unknown option '--env'`. The long form parses cleanly.
+
+   Drop `--scope user` if you only want it in the current project. Alternatively, check a project-scoped `.mcp.json` into your repo root with the same shape (inside JSON `args` the short `-p` is fine — it goes straight to npx and never reaches the claude parser):
 
 ```jsonc
 // .mcp.json (project root)
@@ -25,7 +106,7 @@ claude mcp add kireo --env KIREO_API_KEY=ki_sk_xxx -- npx -y @kireo/mcp-server
   "mcpServers": {
     "kireo": {
       "command": "npx",
-      "args": ["-y", "@kireo/mcp-server"],
+      "args": ["-y", "--package=@kireo/mcp-server", "kireo-mcp"],
       "env": { "KIREO_API_KEY": "ki_sk_xxx" }
     }
   }
@@ -44,56 +125,6 @@ claude mcp add kireo --env KIREO_API_KEY=ki_sk_xxx -- npx -y @kireo/mcp-server
 | `memory_delete` | Soft/hard delete |
 | `memory_list_namespaces` | Enumerate namespaces |
 | `memory_health` | Probe service |
-
-## Client setup
-
-The server config is identical everywhere — only the file (or UI) each client reads it from differs. Use your `ki_sk_…` key from <https://app.kireo.app/api-keys>.
-
-**Claude Code** — run `claude mcp add kireo --env KIREO_API_KEY=ki_sk_xxx -- npx -y @kireo/mcp-server` (add `--scope user` for all projects), or check a project-scoped `.mcp.json` into your repo root (see the Quickstart block above).
-
-**Cursor** — `~/.cursor/mcp.json` (or `<workspace>/.cursor/mcp.json` for a single repo):
-
-```jsonc
-{
-  "mcpServers": {
-    "kireo": {
-      "command": "npx",
-      "args": ["-y", "@kireo/mcp-server"],
-      "env": { "KIREO_API_KEY": "ki_sk_xxx" }
-    }
-  }
-}
-```
-
-**Cline** — open the MCP Servers panel → *Configure MCP Servers*, then add:
-
-```json
-{
-  "mcpServers": {
-    "kireo": {
-      "command": "npx",
-      "args": ["-y", "@kireo/mcp-server"],
-      "env": { "KIREO_API_KEY": "ki_sk_xxx" }
-    }
-  }
-}
-```
-
-**Claude Desktop** — `claude_desktop_config.json` (macOS: `~/Library/Application Support/Claude/`, Windows: `%APPDATA%\Claude\`):
-
-```json
-{
-  "mcpServers": {
-    "kireo": {
-      "command": "npx",
-      "args": ["-y", "@kireo/mcp-server"],
-      "env": { "KIREO_API_KEY": "ki_sk_xxx" }
-    }
-  }
-}
-```
-
-Restart the client after editing. Any other MCP-compatible host (Windsurf, Zed, Continue …) uses the same `command` / `args` / `env` triple.
 
 ## Configuration
 
@@ -149,7 +180,7 @@ Set `KIREO_TELEMETRY=0` to drop the `X-Device-Id` header. We never read your cod
 
 ## Troubleshooting
 
-- `AUTH_INVALID_KEY` → rotate your key at <https://app.kireo.app/api-keys>.
+- `AUTH_INVALID_KEY` → rotate your key at <https://app.kireo.app/app/api-keys>.
 - `QUOTA_EXCEEDED` → upgrade or wait for next billing cycle.
 - Tools missing in your host → run `npx @modelcontextprotocol/inspector node $(npm root -g)/@kireo/mcp-server/bin/kireo-mcp.cjs` to verify locally.
 
