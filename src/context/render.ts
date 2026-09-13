@@ -101,7 +101,7 @@ export const renderContext = (
     omittedTotal > 0
       ? `showing ${kept.length} of ${entries.length} entries`
       : `${entries.length} entries`;
-  const morePart = meta.moreBeyondFetched ? ' · 仓库里还有更多未读取' : '';
+  const morePart = meta.moreBeyondFetched ? ' · More entries have not been fetched' : '';
   const header = `${headPrefix}${countPart}${morePart}`;
 
   const lines: string[] = [header, ''];
@@ -124,7 +124,7 @@ export const renderContext = (
     }
     if (omitted > 0) {
       lines.push(
-        `- … 另有 ${omitted} 条${g.title} 因 token 预算未展示（用更大的 token_budget 重跑）`,
+        `- … ${omitted} more ${g.title} entries omitted by the token budget (rerun with a larger token_budget)`,
       );
     }
     lines.push('');
@@ -135,7 +135,7 @@ export const renderContext = (
   // facts, and conflating them produces a header saying "N entries" directly
   // above a message claiming nothing has ever been saved.
   if (entries.length === 0) {
-    lines.push('（这个项目还没有存过上下文。用 /kireo:save 存第一条。）');
+    lines.push('No structured context has been saved for this project. Use /kireo:save or $kireo-save to save the first entry.');
   }
 
   return lines.join('\n').trimEnd();

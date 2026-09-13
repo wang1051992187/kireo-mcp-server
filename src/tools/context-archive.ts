@@ -52,7 +52,7 @@ export const contextArchiveTool = defineTool<z.infer<typeof Input>>({
   handler: async (rawInput, ctx) => {
     const cwd = typeof rawInput?.cwd === 'string' ? rawInput.cwd : process.cwd();
     if (isDisabled(cwd, process.env) || isDisabled(repoRootOrCwd(cwd), process.env)) {
-      return toJsonResult({ disabled: true }, 'kireo 隐私开关已启用，本次未压缩归档或上传');
+      return toJsonResult({ disabled: true }, 'Kireo is disabled. No archive was created or uploaded.');
     }
     const input = Input.parse(rawInput);
     const project = archiveProject(input.cwd);
@@ -89,7 +89,7 @@ export const contextArchiveTool = defineTool<z.infer<typeof Input>>({
       chunks: chunks.length,
     };
     if (input.dry_run) {
-      return toJsonResult({ ...destination, dry_run: true, items }, '压缩归档预览，尚未写入或上传');
+      return toJsonResult({ ...destination, dry_run: true, items }, 'Archive preview only. Nothing has been saved or uploaded.');
     }
 
     // Each version has its own directory; repeated saves never destroy an older summary.
@@ -149,8 +149,8 @@ export const contextArchiveTool = defineTool<z.infer<typeof Input>>({
         dashboard_url: `https://app.kireo.app/app/memories?namespace=${project.namespace}`,
       },
       pending
-        ? `已保存 ${project.filename} 到本地，上传未完整确认；下次 compact 自动补传`
-        : `已上传 ${project.filename}（${chunks.length} 段），项目 = ${project.name}`,
+        ? `Saved ${project.filename} locally. Upload is not fully confirmed; run compact again to retry.`
+        : `Uploaded ${project.filename} (${chunks.length} parts). Project: ${project.name}. Search the returned namespace to find it later.`,
     );
   },
 });

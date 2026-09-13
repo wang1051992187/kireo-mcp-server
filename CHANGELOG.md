@@ -2,6 +2,12 @@
 
 All notable changes to `@kireo/mcp-server` will be documented in this file.
 
+## 0.3.1 (2026-09-13)
+
+- Use English for archive and Context Relay operational messages, including previews, queued uploads, project identity and resume notices
+- Translate Claude Code and Codex plugin instructions while preserving the user's language in saved content unless translation is requested
+- Add English onboarding, a labeled sample walkthrough, troubleshooting and feedback materials
+
 ## 0.3.0 — 2026-09-13
 
 - Add `context_archive`: upload a host-compressed conversation as a directory-named Markdown archive, with local versioned files, lossless chunking, redaction and a retry outbox

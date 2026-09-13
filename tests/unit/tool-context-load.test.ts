@@ -84,7 +84,7 @@ describe('context_load tool', () => {
     const request = vi.fn(async () => listOk([]));
     const res = await contextLoadTool.handler({} as LoadInput, makeCtx(request));
     const text = res.content.map((c) => (c as { text: string }).text).join('');
-    expect(text).toMatch(/还没有存过|no context/i);
+    expect(text).toMatch(/No structured context has been saved/i);
   });
 
   it('surfaces a pending outbox so the user knows something is unsent', async () => {
@@ -139,7 +139,7 @@ describe('context_load tool', () => {
     const request = vi.fn(async () => listOk([memory()], 'more'));
     const res = await contextLoadTool.handler({} as LoadInput, makeCtx(request));
     const text = res.content.map((c) => (c as { text: string }).text).join('');
-    expect(text).toContain('还有更多未读取');
+    expect(text).toContain('More entries have not been fetched');
   });
 });
 
@@ -191,7 +191,7 @@ describe('context_load kill switch (spec §10: hit = return immediately, do noth
     // 3. "Do nothing" includes not writing to the repo.
     expect(existsSync(contextMd())).toBe(false);
     expect(res.content.map((c) => (c as { text: string }).text).join('')).toContain(
-      '隐私开关已启用',
+      'Kireo is disabled',
     );
   });
 

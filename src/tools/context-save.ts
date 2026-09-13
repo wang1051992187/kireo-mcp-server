@@ -182,7 +182,7 @@ export const contextSaveTool = defineTool<InputT>({
     ) {
       return toJsonResult(
         { disabled: true },
-        'kireo 隐私开关已启用（.kireo/disabled 或 KIREO_DISABLED），本次未做任何操作',
+        'Kireo is disabled (.kireo/disabled or KIREO_DISABLED). No action was taken',
       );
     }
 
@@ -302,7 +302,7 @@ export const contextSaveTool = defineTool<InputT>({
             metadata: it.metadata,
           })),
         },
-        `[首次运行·强制预览] 以下 ${items.length} 条（已做已知凭据脱敏，未做业务机密判断）将在确认后发往 ${p.ctxNs}。这是首次运行的强制预览：请把内容原样展示给用户，确认内容无业务敏感信息后，再带 dry_run:false 调用一次即可真正保存。本次未写 outbox、未上传、未追加审计。`,
+        `[First-run preview] ${items.length} entries are intended for ${p.ctxNs}. Recognized credentials were redacted; business-sensitive content has not been assessed. Show this exact preview and obtain confirmation before calling with dry_run:false. Nothing was queued, uploaded, or added to the audit log.`,
       );
     }
 
@@ -320,7 +320,7 @@ export const contextSaveTool = defineTool<InputT>({
             metadata: it.metadata,
           })),
         },
-        `[dry-run] 以下 ${items.length} 条（已做已知凭据脱敏，未做业务机密判断）将在确认后发往 ${p.ctxNs}：请把内容原样展示给用户，确认无业务机密后再以 dry_run:false 重新调用完成保存。`,
+        `[dry-run] Preview of ${items.length} entries for ${p.ctxNs}. Recognized credentials were redacted; review business-sensitive content before uploading. Show the exact preview and call with dry_run:false only when authorized.`,
       );
     }
 
@@ -455,14 +455,14 @@ export const contextSaveTool = defineTool<InputT>({
       }
     }
 
-    const flushedNote = flushedEntries > 0 ? ` · 顺带补传了积压的 ${flushedEntries} 条` : '';
+    const flushedNote = flushedEntries > 0 ? ` · Retried ${flushedEntries} queued entries` : '';
     const summary = pending
-      ? `已在本地留存 ${items.length} 条（上传未成功，下次 save/resume 会自动重试）${
+      ? `Saved ${items.length} entries locally (upload pending; save/resume will retry)${
           supersedes.length > 0
-            ? ` · 被推翻的 ${supersedes.length} 条暂不删除，等这批传上去再一起处理`
+            ? ` · ${supersedes.length} superseded entries will be removed after this batch uploads`
             : ''
-        }${flushedNote} · 项目 = ${p.displayName}`
-      : `已存 ${stored} 条${deduped ? ` · 去重 ${deduped} 条` : ''}${superseded ? ` · 软删 ${superseded} 条(被推翻)` : ''}${flushedNote} · 项目 = ${p.displayName}`;
+        }${flushedNote} · Project: ${p.displayName}`
+      : `Saved ${stored} entries${deduped ? ` · Deduplicated ${deduped} entries` : ''}${superseded ? ` · Soft-deleted ${superseded} superseded entries` : ''}${flushedNote} · Project: ${p.displayName}`;
 
     return toJsonResult(
       {

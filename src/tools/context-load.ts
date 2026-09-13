@@ -111,9 +111,9 @@ export const contextLoadTool = defineTool<InputT>({
     if (isDisabled(repoRootOrCwd(cwd), process.env)) {
       ctx.logger.info({ cwd }, 'tool.context_load.disabled');
       return toTextResult(
-        'kireo 隐私开关已启用（.kireo/disabled 或 KIREO_DISABLED），本次未做任何操作：\n' +
-          '没有联网取回上下文，没有补传本地积压的 outbox，也没有写 .kireo/CONTEXT.md。\n' +
-          '要恢复，删掉仓库里的 .kireo/disabled，或取消 KIREO_DISABLED 环境变量。',
+        'Kireo is disabled (.kireo/disabled or KIREO_DISABLED). No action was taken：\n' +
+          'No context was fetched, no queued uploads were retried, and .kireo/CONTEXT.md was not written.\n' +
+          'To resume, remove .kireo/disabled or unset KIREO_DISABLED.',
       );
     }
 
@@ -227,10 +227,10 @@ export const contextLoadTool = defineTool<InputT>({
     // Only claim a retry will happen for what is genuinely still pending, and
     // say plainly what this call already pushed — the old text promised an
     // automatic retry that no code path performed.
-    const flushedNote = flushedEntries > 0 ? `\n\n✅ 已补传本地积压的 ${flushedEntries} 条。` : '';
+    const flushedNote = flushedEntries > 0 ? `\n\nRetried ${flushedEntries} queued entries successfully.` : '';
     const suffix =
       pending > 0
-        ? `\n\n⚠️ 本地还有 ${pending} 批未上传的上下文（这次也没传上去）。修好 API key / 网络 / 配额后，下次 save 或 resume 会再试。`
+        ? `\n\n${pending} context batches remain queued locally. Check your API key, connection and quota; the next save or resume will retry.`
         : '';
     return toTextResult(`${body}${flushedNote}${suffix}`);
   },

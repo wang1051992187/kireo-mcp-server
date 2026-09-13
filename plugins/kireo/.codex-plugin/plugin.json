@@ -1,6 +1,6 @@
 {
   "name": "kireo",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Conversation memory for Codex: compress recent rounds into a directory-named Markdown archive and upload to Kireo, or save and resume structured project context.",
   "author": {
     "name": "Kireo",

@@ -47,13 +47,13 @@ Every other client takes the same server entry; only the file it goes in differs
 | Windsurf | `~/.codeium/windsurf/mcp_config.json` |
 | Zed / Continue / any MCP host | Whatever that host calls its MCP server list — same three fields |
 
-Restart the client afterwards. Node.js ≥ 18 must be on PATH for `npx`.
+Restart the client afterwards. Node.js ≥ 20 must be on PATH for `npx`.
 
 ### Which tools does it expose?
 
 Twelve, over MCP stdio: `memory_save`, `memory_search`, `memory_recall`, `memory_get`,
 `memory_update`, `memory_delete`, `memory_list_namespaces`, `memory_health`, `context_save`,
-`context_resume`, `context_status`, and `context_archive`. Every client sees the same set. Call `memory_health` first to confirm the key works.
+`context_load`, `project_info`, and `context_archive`. Every client sees the same set. Call `memory_health` first to confirm the key works.
 
 ### Does it bloat my prompt?
 

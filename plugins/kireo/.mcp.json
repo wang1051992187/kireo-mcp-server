@@ -4,7 +4,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "--package=@kireo/mcp-server@0.3.0",
+        "--package=@kireo/mcp-server@0.3.1",
         "kireo-mcp"
       ]
     }

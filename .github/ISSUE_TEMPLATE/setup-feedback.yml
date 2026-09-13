@@ -1,0 +1,38 @@
+name: Setup or archive problem
+description: Tell us where you got stuck installing, archiving, or searching
+title: "[Feedback] "
+body:
+  - type: markdown
+    attributes:
+      value: "Please leave out API keys, private conversations, and confidential code. A small non-sensitive example is enough."
+  - type: dropdown
+    id: assistant
+    attributes:
+      label: Assistant
+      options: [Claude Code, Codex, Other MCP client]
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Assistant version and operating system
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Where did you get stuck?
+      options: [Installing, Configuring a key, Previewing, Uploading, Finding an archive, Summary quality, Other]
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead?
+      description: Include a redacted error if available; no full transcript is needed
+    validations:
+      required: true

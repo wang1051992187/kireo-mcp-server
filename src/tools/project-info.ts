@@ -34,8 +34,8 @@ export const projectInfoTool = defineTool<InputT>({
     const p = resolveProjectHere(input.cwd ?? process.cwd());
     ctx.logger.info({ project_key: p.key, source: p.source }, 'tool.project_info.ok');
     const summary = p.warn
-      ? `项目 = ${p.displayName}（来源: ${p.source}）\n⚠️ ${p.warn}`
-      : `项目 = ${p.displayName}（来源: ${p.source}）`;
+      ? `Project: ${p.displayName} (source: ${p.source})\n⚠️ ${p.warn}`
+      : `Project: ${p.displayName} (source: ${p.source})`;
     return toJsonResult(
       {
         key: p.key,

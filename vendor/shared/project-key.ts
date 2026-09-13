@@ -136,7 +136,7 @@ export const resolveProjectKey = (deps: ResolveProjectKeyDeps): ResolvedProjectK
     source: 'basename',
     displayName: key,
     warn:
-      `项目标识回退到目录名 "${key}"，这在换设备/换目录后会变成另一个项目。` +
-      ` 运行 \`kireo project init\` 把它固化进 .kireo/project.json 并提交。`,
+      `Project identity falls back to directory name "${key}" and may change across devices or directories.` +
+      ` Run \`kireo project init\` to pin it in .kireo/project.json and commit the file.`,
   };
 };

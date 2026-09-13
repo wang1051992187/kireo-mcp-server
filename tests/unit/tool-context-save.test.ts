@@ -208,7 +208,7 @@ describe('context_save tool — first run (no acknowledgement marker)', () => {
     expect(text).toContain('BullMQ');
     // ...and the caller is told this is a first-run forced preview and how
     // to proceed (explicit dry_run:false).
-    expect(text).toMatch(/首次/);
+    expect(text).toMatch(/First-run preview/);
     expect(text).toMatch(/dry_run/);
   });
 
@@ -246,7 +246,7 @@ describe('context_save tool — first run (no acknowledgement marker)', () => {
     // Upload succeeded → outbox cleared, normal success summary.
     expect(listOutbox(outbox)).toHaveLength(0);
     const text = res.content.map((c) => (c as { text: string }).text).join('');
-    expect(text).toMatch(/已存/);
+    expect(text).toMatch(/Saved/);
   });
 
   it('after the marker exists, an omitted dry_run goes back to being a real save', async () => {
@@ -331,7 +331,7 @@ describe('context_save tool — REAL dispatch path (safeParse → handler, exact
     expect(existsSync(markerPath)).toBe(false);
     const text = res.content.map((c) => (c as { text: string }).text).join('');
     expect(text).toContain('BullMQ');
-    expect(text).toMatch(/首次/);
+    expect(text).toMatch(/First-run preview/);
     expect(text).toMatch(/dry_run/);
   });
 
@@ -352,7 +352,7 @@ describe('context_save tool — REAL dispatch path (safeParse → handler, exact
     // Upload succeeded → outbox cleared, normal success summary.
     expect(listOutbox(outbox)).toHaveLength(0);
     const text = res.content.map((c) => (c as { text: string }).text).join('');
-    expect(text).toMatch(/已存/);
+    expect(text).toMatch(/Saved/);
   });
 
   it('marker present + omitted dry_run through the parse path: ordinary real save', async () => {
@@ -421,7 +421,7 @@ describe('context_save supersedes ordering (review finding: net context loss)', 
 
     expect(calls.filter((c) => c.startsWith('DELETE /v1/memories/old-'))).toEqual([]);
     const text = res.content.map((c) => (c as { text: string }).text).join('');
-    expect(text).toContain('暂不删除');
+    expect(text).toContain('will be removed after this batch uploads');
   });
 
   it('carries the supersede intent into the outbox so a flush can finish the job', async () => {

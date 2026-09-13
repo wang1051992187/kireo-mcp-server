@@ -1,37 +1,22 @@
 ---
-description: 加载并展示这个项目之前存过的上下文（约束、待办、决策、坑、地图、偏好）
-argument-hint: [备注（可选）]
+description: Load previously saved project context to continue work, including constraints, open threads and decisions.
+argument-hint: [optional note]
 ---
 
 # /kireo:resume
 
-## 第 0 步：定位项目
+## Identify the project
 
-先调用 `project_info` 工具，把它返回的 `key` 和 `source` 原样告诉用户 —— 项目认错了是用户唯一能当场发现的错误，藏起来用户就再也发现不了了。
+Call project_info and show its key and source so the user can check the project identity.
 
-## 加载并展示上下文
+## Load context
 
-调用 `context_load` 工具，把返回的文本原样展示给用户 —— 不转述、不省略分组标题、不重新排序。
+Call context_load and display the returned text without paraphrasing, reordering or dropping group headings.
 
-读 `context_load` 返回的文本时，遵守这些规则，不要自由发挥。
+Display the text returned by context_load without reordering or dropping sections. Its order is Constraints → Open threads → Decisions → Gotchas → Key files → Preferences.
 
-## 顺序已经定好，不要重新排序
-文本按 Constraints → Open threads → Decisions → Gotchas → Key files →
-Preferences 分组，这是"硬限制优先，其次是要做的事，再是背景信息"的顺序。
-照这个顺序转述给用户，不要按你觉得更重要的顺序重排，也不要把某个分组
-挪到最前面。
+Keep the code-index freshness line: it tells the user whether the index exists and how old it is.
 
-## 两个标记，含义不同，不要混着讲
-- `[uncertain]`：这条的证据没有在原始会话里核实到，当作"可能不准"处理，
-  不要当成已确认的事实转述给用户。
-- `[stale]`：这条 open 线索超过 90 天没人碰过了，提醒用户它可能已经过期
-  或者已经不需要了，不代表内容本身是错的。
+Explain markers accurately: [uncertain] means the original evidence was not verified, so do not present it as confirmed fact. [stale] means an open thread has not changed for over 90 days; it may no longer apply, but it is not necessarily false.
 
-## 空态不是错误
-如果返回文本说这个项目还没有存过上下文，那是正常状态，不是加载失败——
-照实告诉用户，并提示可以用保存命令存第一条，不要当成故障去排查。
-
-## 代码索引新鲜度必须转达
-返回文本第一行会报告 code index 是否存在、隔了多少天没更新。这一行不是
-元数据噪音，用户依赖它判断"让你去读的代码索引到底新不新鲜"——一定要
-带到，不要因为看起来不重要就省略。
+An empty project is normal. Explain that no structured context has been saved and suggest the save command. It is not a loading failure. Preserve stored content and use English for operational guidance by default, unless the user requests another language.

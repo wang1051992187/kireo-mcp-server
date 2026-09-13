@@ -136,9 +136,9 @@ export const resolveProjectHere = (cwd: string): ProjectHere => {
     codeNsMigrationHint: pinned
       ? null
       : [
-          `代码索引仍在用旧式桶名 "${codeNsLegacy}"（按目录名推导，换目录名或换设备就会分裂成另一个桶，`,
-          '而且两个都叫 api 的仓库会共用同一个桶）。跑 `kireo project init --migrate` 可以把项目标识固化进 ',
-          `.kireo/project.json，并把这个桶原地改名成 "${codeNsPinned}"。`,
+          `The code index still uses the directory-derived namespace "${codeNsLegacy}". Renaming or moving the directory may change it; `,
+          'two repositories named api can share it. Run `kireo project init --migrate` to pin the project in ',
+          `.kireo/project.json and rename this namespace to "${codeNsPinned}".`,
         ].join(''),
     indexRoot: indexRootRel(cwd),
     homeNs: HOME_NAMESPACE,

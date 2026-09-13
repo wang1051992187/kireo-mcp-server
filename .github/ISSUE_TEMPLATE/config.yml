@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Discuss an idea or a use case
+    url: https://github.com/wang1051992187/kireo-mcp-server/discussions
+    about: Tell us what you want to do and what is missing

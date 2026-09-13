@@ -170,7 +170,7 @@ describe('renderContext budget truncation is visible (review finding)', () => {
     // exist is worse than no context".
     const out = renderContext(crowded(), meta, new Date(), 1200);
     expect(out).toContain('## Constraints');
-    expect(out).toMatch(/另有 \d+ 条Constraints 因 token 预算未展示/);
+    expect(out).toMatch(/\d+ more Constraints entries omitted by the token budget/);
   });
 
   it('says nothing about truncation when everything fits', () => {
@@ -187,6 +187,6 @@ describe('renderContext budget truncation is visible (review finding)', () => {
       new Date(),
       1200,
     );
-    expect(out).toContain('还有更多未读取');
+    expect(out).toContain('More entries have not been fetched');
   });
 });
