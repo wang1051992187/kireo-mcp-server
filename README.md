@@ -11,7 +11,7 @@
 
 **Kireo memory MCP** is a Model Context Protocol server that gives Claude Code, Cursor, Cline,
 Windsurf and any other MCP client long-term memory. Save a decision once; recall it in any later
-session, on any machine. Hybrid semantic + keyword search over LanceDB, eight MCP tools, plus
+session, on any machine. Hybrid semantic + keyword search over LanceDB, 12 MCP tools, plus
 local code indexing. Free beta — an API key is all you need.
 
 ### How do I install Kireo memory MCP?
@@ -51,9 +51,9 @@ Restart the client afterwards. Node.js ≥ 18 must be on PATH for `npx`.
 
 ### Which tools does it expose?
 
-Eight, over MCP stdio: `memory_save`, `memory_search`, `memory_recall`, `memory_get`,
-`memory_update`, `memory_delete`, `memory_list_namespaces`, `memory_health`. Every client sees the
-same set. Call `memory_health` first to confirm the key works.
+Twelve, over MCP stdio: `memory_save`, `memory_search`, `memory_recall`, `memory_get`,
+`memory_update`, `memory_delete`, `memory_list_namespaces`, `memory_health`, `context_save`,
+`context_resume`, `context_status`, and `context_archive`. Every client sees the same set. Call `memory_health` first to confirm the key works.
 
 ### Does it bloat my prompt?
 
@@ -75,8 +75,9 @@ only send changed files, and the server dedupes identical symbols, so retrying i
 
 ### Is my code uploaded?
 
-No. Only the content explicitly passed to `memory_save` (and, if you run `kireo index`, the symbols
-it extracts) leaves your machine. Set `KIREO_TELEMETRY=0` to also drop the `X-Device-Id` header.
+The compact command uploads the conversation summary you ask it to archive. `context_save`
+uploads a handoff; `memory_save` uploads supplied content; `kireo index` uploads extracted code
+symbols. These actions send their content to your Kireo account. Set `KIREO_TELEMETRY=0` to also drop the `X-Device-Id` header.
 
 ### What does it cost?
 
