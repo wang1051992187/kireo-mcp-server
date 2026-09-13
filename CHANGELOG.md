@@ -2,6 +2,14 @@
 
 All notable changes to `@kireo/mcp-server` will be documented in this file.
 
+## 0.3.0 — 2026-09-13
+
+- Add `context_archive`: upload a host-compressed conversation as a directory-named Markdown archive, with local versioned files, lossless chunking, redaction and a retry outbox
+- Add Claude Code `/kireo:compact` and Codex `$kireo-compact` plugin entries, pinned to this MCP release
+- Ship Context Relay tools: `project_info`, `context_save`, `context_load`, with evidence checks, project identity, cross-project summaries and offline replay
+- Ship `doctor`, `resume`, project migration and historical transcript import commands
+- Improve code indexing freshness, subdirectory handling, privacy switches and incomplete batch acknowledgement handling
+
 ## 0.2.2 — 2026-08-02
 
 Docs and packaging only — **no runtime changes**. The published code is byte-identical to 0.2.1.

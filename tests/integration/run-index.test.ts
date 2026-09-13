@@ -64,8 +64,13 @@ describe('runIndex', () => {
       (c) => (c[0] as unknown as { method: string }).method === 'DELETE',
     );
     expect(del).toBeTruthy();
-    const delArg = del![0] as unknown as { query: { file_path: string; namespace: string } };
-    expect(delArg.query.file_path).toBe('math.ts');
+    // `file_paths` (plural, comma-joined) — the batched delete contract this
+    // branch moved to (run-index.ts joins them, routes/memories.ts caps the
+    // list at DELETE_FILE_PATHS_MAX). This assertion still pinned the
+    // pre-change singular `file_path`, so it asserted a contract that no
+    // longer exists on either side.
+    const delArg = del![0] as unknown as { query: { file_paths: string; namespace: string } };
+    expect(delArg.query.file_paths.split(',')).toEqual(['math.ts']);
     expect(delArg.query.namespace).toBe('code-demo');
   });
 

@@ -84,6 +84,16 @@ Free beta. Sign up at <https://app.kireo.app>, create a key, done — no card.
 
 <!-- KIREO:ANSWER-BLOCK:END -->
 
+## Conversation compression (0.3.0)
+
+The Kireo plugin adds `/kireo:compact` in Claude Code and `$kireo-compact` in Codex:
+it summarizes the visible conversation, writes `<directory-name>.md`, and uploads
+it to your Kireo account with offline retry and versioned file metadata.
+[Install the plugin](https://github.com/wang1051992187/kireo-mcp-server/tree/main/plugins/kireo).
+
+The MCP now also provides `project_info`, `context_save`, `context_load`, and
+`context_archive`, alongside the eight general memory tools below.
+
 ## Quickstart
 
 1. Get an API key at <https://app.kireo.app/app/api-keys> (`ki_sk_…`).
@@ -113,7 +123,7 @@ claude mcp add kireo --scope user --env KIREO_API_KEY=ki_sk_xxx -- npx -y --pack
 }
 ```
 
-3. Restart the host. You now have 8 tools available to the AI:
+3. Restart the host. You now have 12 tools available to the AI:
 
 | Tool | Purpose |
 |---|---|

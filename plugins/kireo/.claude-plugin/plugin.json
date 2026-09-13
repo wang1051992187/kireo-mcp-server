@@ -1,0 +1,18 @@
+{
+  "name": "kireo",
+  "version": "0.3.0",
+  "description": "Conversation memory for Claude Code: compress recent rounds into a directory-named Markdown archive and upload to Kireo, or save and resume structured project context.",
+  "author": {
+    "name": "Kireo",
+    "url": "https://kireo.app"
+  },
+  "homepage": "https://kireo.app",
+  "repository": "https://github.com/wang1051992187/kireo-mcp-server",
+  "license": "MIT",
+  "keywords": [
+    "memory",
+    "context",
+    "mcp",
+    "claude-code"
+  ]
+}

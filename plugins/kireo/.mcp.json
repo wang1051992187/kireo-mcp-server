@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "kireo": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "--package=@kireo/mcp-server@0.3.0",
+        "kireo-mcp"
+      ]
+    }
+  }
+}

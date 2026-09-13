@@ -1,0 +1,39 @@
+{
+  "name": "kireo",
+  "version": "0.3.0",
+  "description": "Conversation memory for Codex: compress recent rounds into a directory-named Markdown archive and upload to Kireo, or save and resume structured project context.",
+  "author": {
+    "name": "Kireo",
+    "url": "https://kireo.app"
+  },
+  "homepage": "https://kireo.app",
+  "repository": "https://github.com/wang1051992187/kireo-mcp-server",
+  "license": "MIT",
+  "keywords": [
+    "memory",
+    "context",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Kireo",
+    "shortDescription": "Compress conversations and upload project memories",
+    "longDescription": "Conversation memory for Codex: compress recent rounds into a directory-named Markdown archive and upload to Kireo, or save and resume structured project context.",
+    "developerName": "Kireo",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://kireo.app",
+    "privacyPolicyURL": "https://kireo.app/privacy",
+    "termsOfServiceURL": "https://kireo.app/terms",
+    "defaultPrompt": [
+      "Compress our recent conversation and upload it as a Markdown file named after this directory",
+      "Save what we just decided and why before I forget",
+      "What do you already know about this project?"
+    ],
+    "brandColor": "#7C3AED"
+  }
+}

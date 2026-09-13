@@ -28,6 +28,11 @@ describe('server handshake', () => {
     const client = new Client({ name: 'test-client', version: '0.0.0' }, { capabilities: {} });
     await Promise.all([server.connect(a), client.connect(b)]);
 
+    // Exact list, in registry order (src/tools/index.ts). Pinned deliberately:
+    // an accidentally dropped or renamed tool is a breaking change for every
+    // host config that references it by name. The three context-relay tools
+    // were added on this branch without updating this list, which is why
+    // `pnpm test` has been red.
     const tools = await client.listTools();
     expect(tools.tools.map((t) => t.name)).toEqual([
       'memory_save',
@@ -38,6 +43,10 @@ describe('server handshake', () => {
       'memory_delete',
       'memory_list_namespaces',
       'memory_health',
+      'project_info',
+      'context_save',
+      'context_load',
+      'context_archive',
     ]);
 
     await client.close();

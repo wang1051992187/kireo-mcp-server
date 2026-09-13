@@ -25,7 +25,9 @@ async function devSignup(): Promise<string> {
   const res = await fetch(`${API}/v1/dev/signup`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ email: `mcp_e2e_${Date.now()}_${Math.random().toString(36).slice(2)}@kireo.test` }),
+    body: JSON.stringify({
+      email: `mcp_e2e_${Date.now()}_${Math.random().toString(36).slice(2)}@kireo.test`,
+    }),
   });
   if (!res.ok) throw new Error(`signup failed: ${res.status}`);
   return ((await res.json()) as { api_key: string }).api_key;
@@ -101,19 +103,39 @@ describe('MCP ↔ API end-to-end loop', () => {
     child?.kill();
   });
 
-  it('lists 8 tools', (ctx) => {
+  it('lists 12 tools', (ctx) => {
     if (!apiUp) return ctx.skip();
     return api.call('tools/list').then((r) => {
-      expect((r.result?.tools ?? []).length).toBe(8);
+      expect((r.result?.tools ?? []).length).toBe(12);
     });
   });
+
+  it('context_load survives the REAL list envelope', async (ctx) => {
+    // This file's header claims it is "the test that would have caught the
+    // read-tool contract drift" — it could not, because it never called a
+    // context tool. Reading `res.data` from GET /v1/memories (which answers
+    // `{items, next_cursor}`) throws a bare TypeError inside the handler and
+    // surfaces here as an MCP error, so this is exactly the net that was
+    // missing.
+    if (!apiUp) return ctx.skip();
+    const load = await api.call('tools/call', {
+      name: 'context_load',
+      arguments: { token_budget: 400 },
+    });
+    expect(load.error).toBeUndefined();
+    expect(load.result?.content?.[0]?.text).toContain('project ');
+  }, 30_000);
 
   it('save → search → recall → list_namespaces round-trips', async (ctx) => {
     if (!apiUp) return ctx.skip();
 
     const save = await api.call('tools/call', {
       name: 'memory_save',
-      arguments: { content: 'We picked LanceDB for vectors (e2e)', type: 'decision', importance: 0.9 },
+      arguments: {
+        content: 'We picked LanceDB for vectors (e2e)',
+        type: 'decision',
+        importance: 0.9,
+      },
     });
     expect(save.error).toBeUndefined();
     expect(save.result?.content?.[0]?.text).toContain('Saved memory mem_');

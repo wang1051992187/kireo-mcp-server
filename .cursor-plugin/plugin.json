@@ -2,7 +2,7 @@
   "name": "kireo",
   "displayName": "Kireo Memory",
   "description": "Long-term memory for your AI: save decisions and gotchas as you work, then recall them in any session.",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "author": {
     "name": "Kireo"
   },

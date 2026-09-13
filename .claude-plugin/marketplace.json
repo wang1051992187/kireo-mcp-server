@@ -1,0 +1,33 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "kireo",
+  "description": "Kireo — cross-session, cross-device memory for coding agents: save a session's decisions, constraints and gotchas, and replay them when you resume the project.",
+  "owner": {
+    "name": "Kireo",
+    "email": "support@kireo.app"
+  },
+  "metadata": {
+    "description": "Long-term memory relay for Claude Code and Codex",
+    "version": "0.3.0"
+  },
+  "plugins": [
+    {
+      "name": "kireo",
+      "source": "./plugins/kireo",
+      "description": "Compress recent conversation rounds into a directory-named Markdown file with /kireo:compact, or save and resume structured project context.",
+      "author": {
+        "name": "Kireo",
+        "email": "support@kireo.app"
+      },
+      "category": "productivity",
+      "keywords": [
+        "memory",
+        "context",
+        "mcp",
+        "resume",
+        "cross-device"
+      ],
+      "homepage": "https://kireo.app"
+    }
+  ]
+}

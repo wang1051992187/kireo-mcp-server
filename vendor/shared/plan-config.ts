@@ -28,7 +28,9 @@ export const PLAN_CONFIG: Record<Plan, PlanLimits> = {
     reads: 20_000,
     storageBytes: 200 * 1024 * 1024,
     memories: 50_000,
-    namespaces: 20,
+    // 20 only fit (20-1)/2 = 9 projects (ctx+code buckets, -1 for kireo-home).
+    // A power user with 15 repos would hit the wall; 64 covers >=31 projects.
+    namespaces: 64,
     apiKeys: 10,
     retentionDays: 0, // 0 表示不过期
   },
